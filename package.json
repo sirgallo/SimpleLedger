@@ -1,0 +1,61 @@
+{
+  "name": "oatm",
+  "version": "0.0.1-dev",
+  "type": "module",
+  "scripts": {
+    "build:all": "grunt --gruntfile gruntfile.cjs",
+    "start:atm": "node --no-warnings --experimental-modules --es-module-specifier-resolution=node --loader ./moduleAlias.mjs ./dist/atm/StartAtmService.js --color",
+    "cli": "node --no-warnings --experimental-modules --es-module-specifier-resolution=nodenext --loader ./moduleAlias.mjs ./dist/cli/ATMCLI.js --color"
+  },
+  "author": "Sir Gallo",
+  "license": "ISC",
+  "dependencies": {
+    "@fastify/express": "^2.0.0",
+    "@types/express": "^4.17.13",
+    "bcrypt": "^5.0.1",
+    "chalk": "^4.1.0",
+    "cluster": "^0.7.7",
+    "compression": "^1.7.4",
+    "cookie-parser": "^1.4.6",
+    "csurf": "^1.11.0",
+    "dotenv": "^10.0.0",
+    "express": "^4.18.1",
+    "fastify": "^4.2.1",
+    "got": "12.1.0",
+    "grunt": "^1.5.3",
+    "grunt-ts": "^6.0.0-beta.22",
+    "helmet": "^5.1.0",
+    "http-errors": "^2.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.21",
+    "module-alias": "^2.2.2",
+    "mongoose": "^6.4.1",
+    "morgan": "^1.10.0",
+    "node-fetch": "^3.2.6",
+    "os": "^0.1.2",
+    "passport-jwt": "^4.0.0",
+    "ts-node": "^10.8.2",
+    "typescript": "^4.7.4",
+    "util": "^0.12.4",
+    "zeromq": "^6.0.0-beta.6"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/compression": "^1.7.2",
+    "@types/cookie-parser": "^1.4.2",
+    "@types/http-errors": "^1.8.1",
+    "@types/lodash": "^4.14.182",
+    "@types/morgan": "^1.9.3",
+    "@types/node": "^18.0.0",
+    "@types/passport-jwt": "^3.0.6",
+    "@types/zeromq": "^5.2.1",
+    "loadtest": "*"
+  },
+  "_moduleAliases": {
+    "@atm": "./dist/atm",
+    "@core": "./dist/core",
+    "@cli": "./dist/cli",
+    "@baseServer": "./dist/core/baseServer",
+    "@db": "./dist/db"
+  }
+}

@@ -1,0 +1,46 @@
+version: "3"
+services:
+  atmproxy: 
+    image: haproxy-atm-img
+    container_name: haproxy_atm_cont
+    build:
+      context: .
+      dockerfile: ./lb/Dockerfile.atm.lb
+    ports: 
+      - '8888:8888'
+      - '443:443'
+    networks:
+      client-network:
+      atm-network:
+    depends_on:
+      - atm
+  atm:
+    image: atm-img
+    build:
+      context: .
+      dockerfile: ./atm/Dockerfile
+    ports:
+      - '1098'
+    environment:
+      - NODE_ENV=docker
+      - NODE_OPTIONS="--max-old-space-size=4096"
+    volumes:
+      - atm-data:/usr/src/oatm
+    networks:
+      atm-network:
+      atm_db_layer:
+    healthcheck:
+      test: curl --fail http://localhost:1098/poll || kill 1
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: always
+networks:
+  client-network:
+    driver: bridge
+  atm-network:
+    driver: bridge
+  atm_db_layer:
+    driver: bridge
+volumes:
+  atm-data:
