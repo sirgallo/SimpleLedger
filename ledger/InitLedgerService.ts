@@ -53,11 +53,7 @@ export class InitLedgerService extends BaseServer {
       const authRoute = new AuthRoute(authRouteMapping.auth.name, authProv);
       const sysRoute = new SystemRoute(systemRouteMapping.system.name, sysProv);
 
-      this.setRoutes([ 
-        ledgerRoute,
-        authRoute,
-        sysRoute
-      ]);
+      this.setRoutes([ ledgerRoute, authRoute, sysRoute ]);
 
       this.run();
     } catch (err) {

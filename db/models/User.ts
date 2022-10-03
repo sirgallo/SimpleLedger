@@ -11,13 +11,13 @@ export interface IUser extends Document {
 }
 
 export interface IToken extends Document {
-  userId: string
-  token: string
-  refreshToken: string
-  issueDate: Date
-  refreshIssueDate: Date
-  expiresIn: string
-  refreshExpiresIn: string
+  userId: string;
+  token: string;
+  refreshToken: string;
+  issueDate: Date;
+  refreshIssueDate: Date;
+  expiresIn: string;
+  refreshExpiresIn: string;
 }
 
 export const UserSchema: Schema<IUser> = new Schema({
