@@ -9,9 +9,7 @@ import {
 import { ISystem } from '@db/models/System';
 
 const applySession = (session?: ClientSession): { $session: ClientSession } => { 
-  if (session) { 
-    return { $session: session }
-  }
+  if (session) return { $session: session }
 };
 
 export class SystemProvider implements SystemEndpoints {
