@@ -1,10 +1,10 @@
 import { ROUTE, STATUSOK, INFO } from '@core/models/ILog'
 import { IBaseRoute } from '@core/baseServer/core/models/IRouteMappings'
 
-export const atmRouteMapping: Record<string, IBaseRoute>= {
-  atm: {
+export const ledgerRouteMapping: Record<string, IBaseRoute>= {
+  ledger: {
     key: '',
-    name: '/atm',
+    name: '/ledger',
     subRouteMapping: {
       getBalance: {
         key: 'getBalance',

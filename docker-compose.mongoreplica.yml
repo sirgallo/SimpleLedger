@@ -1,41 +1,40 @@
 version: "3"
 services:
-  atmdbprimary:
-    container_name: atmdb_primary_cont
+  ledgerdbprimary:
+    container_name: ledgerdb_primary_cont
     image: mongo:latest
     volumes:
-      - ./db/docker/rs-init.sh:/scripts/rs-init.sh
-      - ./db/configs/mongo-init.sh:/scripts/mongo-init.sh
+      - ./db/rs-init.sh:/scripts/rs-init.sh
     networks:
-      - atm_db_layer
+      - ledger_db_layer
     ports:
       - '27018:27017'
     restart: always
     depends_on:
-      - atmdbreplica1
-      - atmdbreplica2
+      - ledgerdbreplica1
+      - ledgerdbreplica2
     links:
-      - atmdbreplica1
-      - atmdbreplica2
-    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "dev_replication_set" ]
-  atmdbreplica1:
-    container_name: atmdb_replica1_cont
+      - ledgerdbreplica1
+      - ledgerdbreplica2
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "ledger_replication_set" ]
+  ledgerdbreplica1:
+    container_name: ledgerdb_replica1_cont
     image: mongo:latest
     networks:
-      - atm_db_layer
+      - ledger_db_layer
     ports:
       - '27019:27017'
     restart: always
-    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "dev_replication_set" ]
-  atmdbreplica2:
-    container_name: atmdb_replica2_cont
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "ledger_replication_set" ]
+  ledgerdbreplica2:
+    container_name: ledgerdb_replica2_cont
     image: mongo:latest
     networks:
-      - atm_db_layer
+      - ledger_db_layer
     ports:
       - '27020:27017'
     restart: always
-    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "dev_replication_set" ]
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "ledger_replication_set" ]
 networks:
-  atm_db_layer:
+  ledger_db_layer:
     driver: bridge

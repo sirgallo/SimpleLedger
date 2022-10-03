@@ -2,11 +2,11 @@ import { Request, Response, NextFunction } from 'express';
 
 import { BaseRoute, RouteOpts } from '@core/baseServer/core/BaseRoute';
 import { LogProvider } from '@core/providers/LogProvider';
-import { SystemProvider } from '@atm/providers/SystemProvider';
-import { BalanceRequest, TransactionsRequest } from '@atm/models/LedgerRequest';
+import { SystemProvider } from '@ledger/providers/SystemProvider';
+import { BalanceRequest, TransactionsRequest } from '@ledger/models/LedgerRequest';
 import { extractErrorMessage } from '@core/utils/Utils';
 
-import { systemRouteMapping } from '@atm/configs/SystemRouteMapping';
+import { systemRouteMapping } from '@ledger/configs/SystemRouteMapping';
 
 const NAME = 'System Route';
 

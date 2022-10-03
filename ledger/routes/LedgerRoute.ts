@@ -2,19 +2,19 @@ import { Request, Response, NextFunction } from 'express';
 
 import { BaseRoute, RouteOpts } from '@core/baseServer/core/BaseRoute';
 import { LogProvider } from '@core/providers/LogProvider';
-import { LedgerProvider } from '@atm/providers/LedgerProvider';
-import { AuthProvider } from '@atm/providers/AuthProvider';
+import { LedgerProvider } from '@ledger/providers/LedgerProvider';
+import { AuthProvider } from '@ledger/providers/AuthProvider';
 import { 
   BalanceRequest, TransactionsRequest, CreateTransactionRequest
-} from '@atm/models/LedgerRequest';
+} from '@ledger/models/LedgerRequest';
 import { extractErrorMessage } from '@core/utils/Utils';
 
-import { atmRouteMapping } from '@atm/configs/AtmOpsRouteMapping';
+import { ledgerRouteMapping } from '@ledger/configs/LedgerRouteMapping';
 import { SimpleQueueProvider } from '@core/providers/queue/SimpleQueueProvider';
 
-const NAME = 'ATM Ops Route';
+const NAME = 'Ledger Route';
 
-export class AtmOpsRoute extends BaseRoute {
+export class LedgerRoute extends BaseRoute {
   name = NAME;
   
   private log: LogProvider = new LogProvider(NAME);
@@ -23,24 +23,24 @@ export class AtmOpsRoute extends BaseRoute {
     rootpath: string, 
     private ledgerProvider: LedgerProvider,
     private authProvider: AuthProvider,
-    private atmTransactionQueue: SimpleQueueProvider
+    private ledgerTransactionQueue: SimpleQueueProvider
   ) {
     super(rootpath);
     this.log.initFileLogger();
 
-    this.router.post(atmRouteMapping.atm.subRouteMapping.getBalance.name, this.getBalance.bind(this));
-    this.router.post(atmRouteMapping.atm.subRouteMapping.getTransactions.name, this.getTransactions.bind(this));
-    this.router.post(atmRouteMapping.atm.subRouteMapping.createTransaction.name, this.createTransaction.bind(this));
+    this.router.post(ledgerRouteMapping.ledger.subRouteMapping.getBalance.name, this.getBalance.bind(this));
+    this.router.post(ledgerRouteMapping.ledger.subRouteMapping.getTransactions.name, this.getTransactions.bind(this));
+    this.router.post(ledgerRouteMapping.ledger.subRouteMapping.createTransaction.name, this.createTransaction.bind(this));
     
-    this.atmQueueOn();
+    this.ledgerQueueOn();
   }
 
   private async getBalance(req: Request, res: Response, next: NextFunction) {
     const getBalanceReq: BalanceRequest = req.body;
     await this.pipeRequest(
       { 
-        method: atmRouteMapping.atm.subRouteMapping.getBalance.key, 
-        customMsg: atmRouteMapping.atm.subRouteMapping.getBalance 
+        method: ledgerRouteMapping.ledger.subRouteMapping.getBalance.key, 
+        customMsg: ledgerRouteMapping.ledger.subRouteMapping.getBalance 
       }, 
       req, res, next, 
       getBalanceReq
@@ -51,8 +51,8 @@ export class AtmOpsRoute extends BaseRoute {
     const getTransactionReq: TransactionsRequest = req.body;
     await this.pipeRequest(
       { 
-        method: atmRouteMapping.atm.subRouteMapping.getTransactions.key, 
-        customMsg: atmRouteMapping.atm.subRouteMapping.getTransactions 
+        method: ledgerRouteMapping.ledger.subRouteMapping.getTransactions.key, 
+        customMsg: ledgerRouteMapping.ledger.subRouteMapping.getTransactions 
       }, 
       req, res, next, 
       getTransactionReq
@@ -63,8 +63,8 @@ export class AtmOpsRoute extends BaseRoute {
     const createTransactionReq: CreateTransactionRequest = req.body;
     await this.pipeRequest(
       { 
-        method: atmRouteMapping.atm.subRouteMapping.createTransaction.key, 
-        customMsg: atmRouteMapping.atm.subRouteMapping.createTransaction 
+        method: ledgerRouteMapping.ledger.subRouteMapping.createTransaction.key, 
+        customMsg: ledgerRouteMapping.ledger.subRouteMapping.createTransaction 
       }, 
       req, res, next, 
       createTransactionReq
@@ -79,13 +79,13 @@ export class AtmOpsRoute extends BaseRoute {
   }
 
   async performRouteAction(opts: RouteOpts, req: Request, res: Response, next: NextFunction, ...params) {
-    this.atmTransactionQueue.enqueue({ opts, res, params });
+    this.ledgerTransactionQueue.enqueue({ opts, res, params });
   }
 
-  private atmQueueOn() {
-    this.atmTransactionQueue.queueUpdate.on(this.atmTransactionQueue.eventName, async () => {
-      if (this.atmTransactionQueue.length > 0) {
-        const { opts, res, params } = this.atmTransactionQueue.dequeue();
+  private ledgerQueueOn() {
+    this.ledgerTransactionQueue.queueUpdate.on(this.ledgerTransactionQueue.eventName, async () => {
+      if (this.ledgerTransactionQueue.length > 0) {
+        const { opts, res, params } = this.ledgerTransactionQueue.dequeue();
 
         try {
           const resp = await this.ledgerProvider[opts.method](...params);

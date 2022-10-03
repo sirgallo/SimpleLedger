@@ -1,11 +1,11 @@
 import { Schema, Document } from 'mongoose' 
 
-export type AtmOpType = 'spend' | 'receive' | 'withdraw';
+export type LedgerOpType = 'spend' | 'receive' | 'withdraw';
 export const LedgerCollectionName = 'ledger';
 
 export interface ILedger extends Document {
   userId: string;
-  operation: AtmOpType;
+  operation: LedgerOpType;
   transactionSize: number;
   totalBalance: number;
 }

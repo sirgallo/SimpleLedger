@@ -1,0 +1,3 @@
+FROM haproxy:latest
+
+COPY ./lb/configs/haproxy.ledger.cfg /usr/local/etc/haproxy/haproxy.cfg

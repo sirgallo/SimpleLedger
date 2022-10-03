@@ -3,7 +3,7 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     ts: {
-      oatm: {
+      simpleledger: {
         tsconfig: {
           tsconfig: './tsconfig.json',
           passThrough: true,

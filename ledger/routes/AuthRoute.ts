@@ -2,11 +2,11 @@ import { Request, Response, NextFunction } from 'express';
 
 import { BaseRoute, RouteOpts } from '@core/baseServer/core/BaseRoute';
 import { LogProvider } from '@core/providers/LogProvider';
-import { AuthProvider } from '@atm/providers/AuthProvider';
-import { BalanceRequest, TransactionsRequest } from '@atm/models/LedgerRequest';
+import { AuthProvider } from '@ledger/providers/AuthProvider';
+import { BalanceRequest, TransactionsRequest } from '@ledger/models/LedgerRequest';
 import { extractErrorMessage } from '@core/utils/Utils';
 
-import { authRouteMapping } from '@atm/configs/AuthRouteMapping';
+import { authRouteMapping } from '@ledger/configs/AuthRouteMapping';
 
 const NAME = 'Auth Route';
 

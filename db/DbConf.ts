@@ -1,12 +1,12 @@
 import { DBMap } from '@db/models/Configure';
 
 const currDbs = {
-  'atmModels': 1
+  'ledgerModels': 1
 }
 
 export const dbConf: DBMap<typeof currDbs> = {
-  atmModels: {
-    name: 'atmModels',
+  ledgerModels: {
+    name: 'ledgerModels',
     collections: {
       Ledger: 'ledger',
       System: 'system',

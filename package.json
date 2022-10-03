@@ -1,11 +1,11 @@
 {
-  "name": "oatm",
+  "name": "simpleledger",
   "version": "0.0.1-dev",
   "type": "module",
   "scripts": {
     "build:all": "grunt --gruntfile gruntfile.cjs",
-    "start:atm": "node --no-warnings --experimental-modules --es-module-specifier-resolution=node --loader ./moduleAlias.mjs ./dist/atm/StartAtmService.js --color",
-    "cli": "node --no-warnings --experimental-modules --es-module-specifier-resolution=nodenext --loader ./moduleAlias.mjs ./dist/cli/ATMCLI.js --color"
+    "start:ledger": "node --no-warnings --experimental-modules --es-module-specifier-resolution=node --loader ./moduleAlias.mjs ./dist/ledger/StartLedgerService.js --color",
+    "cli": "node --no-warnings --experimental-modules --es-module-specifier-resolution=nodenext --loader ./moduleAlias.mjs ./dist/cli/LedgerCLI.js --color"
   },
   "author": "Sir Gallo",
   "license": "ISC",
@@ -52,7 +52,7 @@
     "loadtest": "*"
   },
   "_moduleAliases": {
-    "@atm": "./dist/atm",
+    "@ledger": "./dist/ledger",
     "@core": "./dist/core",
     "@cli": "./dist/cli",
     "@baseServer": "./dist/core/baseServer",

@@ -1,14 +1,14 @@
 import { ClientSession } from 'mongoose';
 
-import { ATMMongooseProvider } from '@db/providers/ATMMongooseProvider';
-import { AtmOpType, ILedger } from '@db/models/Ledger';
+import { LedgerMongooseProvider } from '@db/providers/LedgerMongooseProvider';
+import { LedgerOpType, ILedger } from '@db/models/Ledger';
 
-import { LedgerEndpoints } from '@atm/models/Endpoints';
+import { LedgerEndpoints } from '@ledger/models/Endpoints';
 import { 
   BalanceRequest, BalanceResponse, CreateTransactionRequest, 
   TransactionsRequest, TransactionsResponse 
-} from '@atm/models/LedgerRequest';
-import { SystemProvider } from '@atm/providers/SystemProvider';
+} from '@ledger/models/LedgerRequest';
+import { SystemProvider } from '@ledger/providers/SystemProvider';
 
 import lodash from 'lodash';
 const { first } = lodash;
@@ -20,13 +20,13 @@ const MAX_DAYS = 30;
 export class LedgerProvider implements LedgerEndpoints {
   private sysProv: SystemProvider;
 
-  constructor(private atmDb: ATMMongooseProvider, private sysId: string) {
-    this.sysProv = new SystemProvider(this.atmDb);
+  constructor(private ledgerDb: LedgerMongooseProvider, private sysId: string) {
+    this.sysProv = new SystemProvider(this.ledgerDb);
   }
 
   async getBalance(opts: BalanceRequest): Promise<BalanceResponse> {
     const lookup = this.genTransactionLookup(opts.userId, parseDateRange(MAX_DAYS));
-    const prevTransaction: ILedger = first(await this.atmDb.MLedger.aggregate(lookup));
+    const prevTransaction: ILedger = first(await this.ledgerDb.MLedger.aggregate(lookup));
 
     return {
       totalBalance: prevTransaction.totalBalance || 0
@@ -35,20 +35,20 @@ export class LedgerProvider implements LedgerEndpoints {
 
   async getTransactions(opts: TransactionsRequest): Promise<TransactionsResponse> {
     const lookup = this.genTransactionLookup(opts.userId, parseDateRange(MAX_DAYS));
-    const transactions: ILedger[] = await this.atmDb.MLedger.aggregate(lookup);
+    const transactions: ILedger[] = await this.ledgerDb.MLedger.aggregate(lookup);
 
     return { transactions }
   }
 
   async createTransaction(opts: CreateTransactionRequest): Promise<boolean> {
-    const calcNewBalance = (op: AtmOpType, size: number, prev: number) => op === 'spend' || op === 'withdraw' ? prev - size : prev + size;
+    const calcNewBalance = (op: LedgerOpType, size: number, prev: number) => op === 'spend' || op === 'withdraw' ? prev - size : prev + size;
     const lookup = this.genTransactionLookup(opts.userId, parseDateRange(1), 1);
 
     //  need this to be atomic
-    const currSession: ClientSession = await this.atmDb.conn.startSession();
+    const currSession: ClientSession = await this.ledgerDb.conn.startSession();
     currSession.startTransaction();
 
-    const prevTransaction: ILedger = first(await this.atmDb.MLedger.aggregate(lookup).session(currSession));
+    const prevTransaction: ILedger = first(await this.ledgerDb.MLedger.aggregate(lookup).session(currSession));
   
     if (opts.operation === 'withdraw') {
       const currSysBalance = await this.sysProv.getBalance(
@@ -65,7 +65,7 @@ export class LedgerProvider implements LedgerEndpoints {
       }
     }
     
-    await this.atmDb.MLedger.create({
+    await this.ledgerDb.MLedger.create({
       userId: opts.userId,
       operation: opts.operation,
       transactionSize: opts.transactionSize,

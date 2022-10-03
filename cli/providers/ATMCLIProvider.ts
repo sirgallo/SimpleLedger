@@ -1,11 +1,11 @@
 import { asyncExponentialBackoff } from '@core/utils/AsyncExponentialBackoff';
-import { LedgerEndpoints } from '@atm/models/Endpoints';
+import { LedgerEndpoints } from 'ledger/models/Endpoints';
 import { 
   BalanceRequest, BalanceResponse, CreateTransactionRequest, 
   TransactionsRequest, TransactionsResponse 
-} from '@atm/models/LedgerRequest';
+} from 'ledger/models/LedgerRequest';
 
-import { atmRouteMapping } from '@atm/configs/AtmOpsRouteMapping';
+import { atmRouteMapping } from 'ledger/configs/AtmOpsRouteMapping';
 
 export class ATMCLIProvider implements LedgerEndpoints { 
   private endpoints: Record<string, string>;

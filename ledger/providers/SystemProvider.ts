@@ -1,11 +1,11 @@
 import { ClientSession } from 'mongoose';
 
-import { ATMMongooseProvider } from '@db/providers/ATMMongooseProvider';
+import { LedgerMongooseProvider } from '@db/providers/LedgerMongooseProvider';
 
-import { SystemEndpoints } from '@atm/models/Endpoints';
+import { SystemEndpoints } from '@ledger/models/Endpoints';
 import { 
   UpdateFundsRequest, SysBalanceRequest, SysBalanceResponse 
-} from '@atm/models/SystemRequest';
+} from '@ledger/models/SystemRequest';
 import { ISystem } from '@db/models/System';
 
 const applySession = (session?: ClientSession): { $session: ClientSession } => { 
@@ -15,10 +15,10 @@ const applySession = (session?: ClientSession): { $session: ClientSession } => {
 };
 
 export class SystemProvider implements SystemEndpoints {
-  constructor(private atmDb: ATMMongooseProvider) {}
+  constructor(private ledgerDb: LedgerMongooseProvider) {}
 
   async getBalance(opts: SysBalanceRequest, session?: ClientSession): Promise<SysBalanceResponse> {
-    const sysObj: ISystem = await this.atmDb.MSystem.findOne(
+    const sysObj: ISystem = await this.ledgerDb.MSystem.findOne(
       { sysId: opts.sysId },
       null,
       applySession(session));
@@ -31,14 +31,14 @@ export class SystemProvider implements SystemEndpoints {
   async updateFunds(opts: UpdateFundsRequest, session?: ClientSession): Promise<boolean> {
     const updateBalance = (prev: number, update: number) => opts.operation === 'add' ? prev + update : prev - update;
 
-    const currSys: ISystem = await this.atmDb.MSystem.findOne(
+    const currSys: ISystem = await this.ledgerDb.MSystem.findOne(
       { sysId: opts.sysId },
       null,
       applySession(session)
     );
 
     if (currSys.balance >= opts.transactionSize) {
-      await this.atmDb.MSystem.findOneAndUpdate(
+      await this.ledgerDb.MSystem.findOneAndUpdate(
         { sysId: opts.sysId },
         { $set: { balance: updateBalance(currSys.balance, opts.transactionSize) }},
         applySession(session)

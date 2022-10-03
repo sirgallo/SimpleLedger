@@ -1,34 +1,34 @@
 version: "3"
 services:
-  atmproxy: 
-    image: haproxy-atm-img
-    container_name: haproxy_atm_cont
+  ledgerproxy: 
+    image: haproxy-ledger-img
+    container_name: haproxy_ledger_cont
     build:
       context: .
-      dockerfile: ./lb/Dockerfile.atm.lb
+      dockerfile: ./lb/Dockerfile.ledger.lb
     ports: 
       - '8888:8888'
       - '443:443'
     networks:
-      client-network:
-      atm-network:
+      client_network:
+      ledger_network:
     depends_on:
-      - atm
-  atm:
-    image: atm-img
+      - ledger
+  ledger:
+    image: ledger-img
     build:
       context: .
-      dockerfile: ./atm/Dockerfile
+      dockerfile: ./ledger/Dockerfile
     ports:
       - '1098'
     environment:
       - NODE_ENV=docker
       - NODE_OPTIONS="--max-old-space-size=4096"
     volumes:
-      - atm-data:/usr/src/oatm
+      - ledger-data:/usr/src/simpleledger
     networks:
-      atm-network:
-      atm_db_layer:
+      ledger_network:
+      ledger_db_layer:
     healthcheck:
       test: curl --fail http://localhost:1098/poll || kill 1
       interval: 30s
@@ -36,11 +36,11 @@ services:
       retries: 3
     restart: always
 networks:
-  client-network:
+  client_network:
     driver: bridge
-  atm-network:
+  ledger_network:
     driver: bridge
-  atm_db_layer:
+  ledger_db_layer:
     driver: bridge
 volumes:
-  atm-data:
+  ledger-data:

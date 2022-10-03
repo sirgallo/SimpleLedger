@@ -22,7 +22,7 @@
     ],
     "baseUrl": "./",
     "paths": {
-      "@atm/*": ["atm/*"],
+      "@ledger/*": ["ledger/*"],
       "@core/*": ["core/*"],
       "@cli/*": ["cli/*"],
       "@baseServer/*": ["core/baseServer/*"],

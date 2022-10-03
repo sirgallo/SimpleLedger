@@ -1,11 +1,11 @@
 import { 
   BalanceRequest, TransactionsRequest, CreateTransactionRequest,
   BalanceResponse, TransactionsResponse
-} from '@atm/models/LedgerRequest';
+} from 'ledger/models/LedgerRequest';
 
 import { 
   SysBalanceRequest, SysBalanceResponse, UpdateFundsRequest
-} from '@atm/models/SystemRequest';
+} from 'ledger/models/SystemRequest';
 import { IUser } from '@db/models/User';
 
 export interface LedgerEndpoints {

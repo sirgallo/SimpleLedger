@@ -3,22 +3,22 @@
 sleep 10
 mongosh <<EOF
 var config = {
-    "_id": "dev_replication_set",
+    "_id": "ledger_replication_set",
     "version": 1,
     "members": [
         {
             "_id": 1,
-            "host": "atmdbprimary:27017",
+            "host": "ledgerdbprimary:27017",
             "priority": 3
         },
         {
             "_id": 2,
-            "host": "atmdbreplica1:27017",
+            "host": "ledgerdbreplica1:27017",
             "priority": 1
         },
         {
             "_id": 3,
-            "host": "atmdbreplica2:27017",
+            "host": "ledgerdbreplica2:27017",
             "priority": 1
         }
     ]
@@ -29,7 +29,7 @@ EOF
 
 sleep 15
 mongosh <<EOF
-use atmModels
+use ledgerModels
 
 db.createUser({
   user: 'devModelsUser',

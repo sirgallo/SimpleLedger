@@ -1,4 +1,4 @@
-import { AtmOpType, ILedger } from '@db/models/Ledger';
+import { LedgerOpType, ILedger } from '@db/models/Ledger';
 
 export interface BalanceRequest {
   userId: string;
@@ -10,7 +10,7 @@ export interface TransactionsRequest {
 
 export interface CreateTransactionRequest {
   userId: string;
-  operation: AtmOpType;
+  operation: LedgerOpType;
   transactionSize: number;
 }
 

@@ -3,10 +3,10 @@ FROM node:18
 RUN apt-get update
 RUN apt-get install -y curl
 
-WORKDIR /usr/src/oatm
+WORKDIR /usr/src/simpleledger
 
 COPY core ./core
-COPY atm ./atm
+COPY ledger ./ledger
 COPY db ./db
 
 COPY moduleAlias.mjs \
@@ -20,4 +20,4 @@ RUN npm install
 RUN npm run build:all
 
 EXPOSE 1098
-CMD ["npm", "run", "start:atm"]
+CMD ["npm", "run", "start:ledger"]
